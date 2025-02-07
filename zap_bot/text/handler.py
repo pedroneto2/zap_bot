@@ -1,6 +1,6 @@
 from app import redis
 from threading import Timer
-from worker import parse_text_message
+from .worker import parse_text_message
 
 def handle_text_requests(wa_id, wa_name, message):
   message_inputs = redis.lrange(wa_id, 0, -1)

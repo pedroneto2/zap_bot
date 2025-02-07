@@ -1,5 +1,5 @@
-from messages_builder import MessagesBuilder
-from llm_requester import LlmRequester
+from .messages_builder import MessagesBuilder
+from .llm_requester import LlmRequester
 
 MSGS_LIMIT = 20
 

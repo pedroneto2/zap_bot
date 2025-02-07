@@ -1,4 +1,4 @@
-from llm_switcher import LlmSwitcher 
+from .llm_switcher import LlmSwitcher 
 from app import connection
 
 class LlmRequester:
