@@ -1,0 +1,25 @@
+services:
+  zap-bot:
+    container_name: zap-bot
+    image: zap-bot
+    volumes:
+      - "~/projects/zap_bot_repos/zap_bot:/app/zap_bot"
+      - "./ENVS:/app/.env"
+    command: bash -c '/docker-entrypoint.sh -L'
+    ports:
+      - "5000:5000"
+    networks:
+      - zap-bot
+    stdin_open: true
+    tty: true
+    external_links:
+        - "zap-bot-redis:zap-bot-redis"
+    environment:
+      FLASK_APP: 'app.py'
+      HOST: "0.0.0.0"
+      PORT: 5000
+      REDISTOGO_URL: "redis://redis:6379/"
+
+networks:
+  zap-bot:
+    external: true

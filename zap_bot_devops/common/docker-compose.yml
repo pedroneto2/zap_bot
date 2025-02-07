@@ -1,0 +1,13 @@
+services:
+  redis:
+    container_name: zap-bot-redis
+    image: redis:alpine
+    ports:
+        - "6378:6379"
+    networks: 
+        - zap-bot 
+    restart: always
+
+networks:
+  zap-bot:
+    name: zap-bot

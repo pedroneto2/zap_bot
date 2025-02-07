@@ -1,0 +1,2 @@
+export FLASK_DEBUG=1
+export GROQ_API_KEY=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
