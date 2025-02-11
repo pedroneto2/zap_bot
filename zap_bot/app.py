@@ -7,9 +7,9 @@ from urllib.parse import urlparse
 def create_db():
   sql = '''
     CREATE TABLE IF NOT EXISTS "messages"(
-      "wa_id" TEXT
-      "role" TEXT
-      "content" TEXT
+      "wa_id" TEXT,
+      "role" TEXT,
+      "content" TEXT,
       "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP
     )'''
   cursor = connection.cursor()
@@ -20,7 +20,7 @@ def create_db():
 app = Flask(__name__)
 url = urlparse(os.environ['REDISTOGO_URL'])
 redis = Redis(host=url.hostname, port=url.port, password=url.password, decode_responses=True)
-connection = connect('./database.db')
+connection = connect('./database.db', check_same_thread=False)
 create_db()
 
 @app.route('/whatsapp/webhook', methods=['GET', 'POST'])

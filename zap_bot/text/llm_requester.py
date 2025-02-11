@@ -16,7 +16,7 @@ class LlmRequester:
         max_tokens = self.max_tokens
     )
 
-    self.response_message = response['choices'][0]['message']['content']
+    self.response_message = response.choices[0].message.content
     self.messages.append({ 'role': 'assistant', 'content': self.response_message })
 
     return response
@@ -26,10 +26,9 @@ class LlmRequester:
 
     cursor = connection.cursor()
 
-    if len(self.messages) <= 2:
-      cursor.execute(sql, wa_id, 'system', self.messages[0][2])
+    cursor.execute(sql, (wa_id, 'system', self.messages[-2]['content']))
 
-    cursor.execute(sql, wa_id, 'assistant', self.response_message)
+    cursor.execute(sql, (wa_id, 'assistant', self.messages[-1]['content']))
 
     connection.commit()
     cursor.close()
