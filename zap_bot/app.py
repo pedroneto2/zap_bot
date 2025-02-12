@@ -35,9 +35,10 @@ def whatsapp_webhook():
     message_type = data['entry'][0]['changes'][0]['value']['messages'][0]['type']
     wa_name = data['entry'][0]['changes'][0]['value']['contacts'][0]['profile']['name']
     wa_id = data['entry'][0]['changes'][0]['value']['contacts'][0]['wa_id']
+    phone_id = data['entry'][0]['changes'][0]['value']['metadata']['phone_number_id']
     if message_type == 'text':
       message = data['entry'][0]['changes'][0]['value']['messages'][0]['text']['body']
-      handle_text_requests(wa_id, wa_name, message)
+      handle_text_requests(phone_id, wa_id, wa_name, message)
       
     return {}
   
