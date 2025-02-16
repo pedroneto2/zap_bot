@@ -2,7 +2,7 @@ import os
 from groq import Groq
 
 class LlmSwitcher:
-  def __init__(self, client_name, model_name = None):
+  def __init__(self, client_name = None, model_name = None):
     self.client_name = client_name
     self.model_name = model_name
 
