@@ -2,11 +2,12 @@ from .messages_builder import MessagesBuilder
 from .llm_switcher import LlmSwitcher 
 from .llm_requester import LlmRequester
 from urllib.request import Request, urlopen
+from datetime import datetime
 import json
 
 MSGS_LIMIT = 20
 
-def build_prompt(wa_name):
+def build_prompt(wa_id, wa_name):
   return f"""
   You are a seller who serves customers via whatsapp.
 
@@ -18,12 +19,23 @@ def build_prompt(wa_name):
 
   Only list the products if the customer ask for it.
 
-  O nome do seu cliente é {wa_name}.
+  Ask customer his address to complete an order.
+
+  Before complete an order, ask customer if the needs anything else.
+
+  Before complete an order, detail the order to the customer and ask if it is right.
+
+  After a customer complete his order, save the order informations with the save_order function.
+  Save all order items in a unique order.
+
+  Your customer name is {wa_name}.
+  Your customer phone is {wa_id}.
+  The current date and time is {datetime.now()}.
   """
   
 def parse_text_message(phone_id, wa_id, wa_name, message_inputs):
   message = '. '.join(message_inputs)
-  prompt = build_prompt(wa_name)
+  prompt = build_prompt(wa_id, wa_name)
 
   llm_client_info = LlmSwitcher().get_client_info()
 

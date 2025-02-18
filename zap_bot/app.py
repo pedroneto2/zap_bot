@@ -1,7 +1,8 @@
 import os
+import json
 from redis import Redis
 from sqlite3.dbapi2 import connect
-from flask import Flask, request
+from flask import Flask, request, render_template
 from urllib.parse import urlparse
 
 def create_db():
@@ -28,6 +29,9 @@ def create_db():
       "customer_name" TEXT,
       "customer_phone" TEXT,
       "customer_address" TEXT,
+      "items" TEXT,
+      "total_price" TEXT,
+      "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY("id")
     )
   '''
@@ -61,4 +65,39 @@ def whatsapp_webhook():
       
     return {}
   
+@app.get('/admin/orders')
+def index():
+  return render_template('index.html')
+
+@app.get('/admin/orders/get')
+def get_orders():
+  sql = "SELECT * FROM orders"
+  
+  cursor = connection.cursor()
+  cursor.execute(sql)
+  orders = cursor.fetchall()
+  cursor.close()
+  
+  return list(map(lambda order:
+                  { 
+                    'id': order[0],
+                    'customer_name': order[1],
+                    'customer_phone': order[2],
+                    'customer_address': order[3],
+                    'items': json.loads(order[4].replace("\'", "\"")),
+                    'total_price': order[5],
+                    'created_at': order[6]
+                  }, orders))
+
+@app.get('/admin/orders/delete')
+def delete_orders():
+  order_id = request.args.get('id', type = str)
+  sql = "DELETE FROM orders WHERE id = ?"
+
+  cursor = connection.cursor()
+  cursor.execute(sql, (order_id))
+  cursor.close()
+
+  return {}
+
 from text.handler import handle_text_requests

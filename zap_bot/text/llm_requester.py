@@ -1,9 +1,11 @@
 from app import connection
 from tools.get_products import get_products
+from tools.save_order import save_order
 import json
 
 AVAILABLE_ARGUMENTS = {
-  "get_products": get_products
+  "get_products": get_products,
+  "save_order": save_order
 }
 
 class LlmRequester:
@@ -123,6 +125,52 @@ class LlmRequester:
                 "description": "The product name",
               }
             }
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "save_order",
+          "description": "Save order informations",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "customer_name": {
+                "type": "string",
+                "description": "The customer name",
+              },
+              "customer_phone": {
+                "type": "string",
+                "description": "The customer phone",
+              },
+              "customer_address": {
+                "type": "string",
+                "description": "The customer address",
+              },
+              "items": {
+                "type": "array",
+                "description": "A list with the items of the customer order",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "product_id": {
+                      "type": "integer",
+                      "description": "The product id of the customer's order item",
+                    },
+                    "quantity": {
+                      "type": "number",
+                      "description": "The quantity of the product of the customer's order item",
+                    }
+                  }
+                }
+              },
+              "total_price": {
+                "type": "string",
+                "description": "The order total price",
+              }
+            },
+            "required": ["customer_name", "customer_phone", "customer_address", "items", "total_price"]
           }
         }
       }
