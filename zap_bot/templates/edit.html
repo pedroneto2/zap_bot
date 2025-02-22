@@ -1,0 +1,21 @@
+<header>
+  <script src="{{url_for('static', filename='javascript/edit.js')}}"></script>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/edit.css')}}">
+</header>
+<body>
+  <h1>Editar Pedido <span>{{order.id}}</span></h1>
+
+  <form action="{{url_for( 'save_order', id = order.id)}}">
+    <label for="cname">Nome do cliente:</label>
+    <input class="input-field" type="text" id="cname" name="cname" value="{{order.customer_name}}"><br><br>
+    <label for="cphone">Whatsapp do cliente:</label>
+    <input class="input-field" type="text" id="cphone" name="cphone" value="{{order.customer_phone}}"><br><br>
+    <label for="caddress">Endereço do cliente:</label>
+    <input class="input-field" type="text" id="caddress" name="caddress" value="{{order.customer_address}}"><br><br>
+    <label for="tprice">Preço Total do Pedido:</label>
+    <input class="input-field" type="text" id="tprice" name="tprice" value="{{order.total_price}}"><br><br>
+    <input id="submit-btn" type="submit" value="Salvar">
+  </form>
+
+  <a href="{{url_for('index')}}">Voltar sem salvar</a>
+</body>

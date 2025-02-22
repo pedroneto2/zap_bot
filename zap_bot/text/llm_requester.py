@@ -158,6 +158,14 @@ class LlmRequester:
                       "type": "integer",
                       "description": "The product id of the customer's order item",
                     },
+                    "product_name": {
+                      "type": "string",
+                      "description": "The product name of the customer's order item",
+                    },
+                    "product_price": {
+                      "type": "string",
+                      "description": "The product price of the customer's order item",
+                    },
                     "quantity": {
                       "type": "number",
                       "description": "The quantity of the product of the customer's order item",

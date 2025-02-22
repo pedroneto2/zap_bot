@@ -1,0 +1,45 @@
+h1 {
+  font-weight: bold;
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+span {
+  color: #780e0e
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+.input-field {
+  width: 300px;
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 5px;
+}
+
+form {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+#submit-btn {
+  margin: 0 auto;
+  display: block;
+}
+
+a {
+  padding: 1px 6px;
+  border: 1px outset buttonborder;
+  border-radius: 3px;
+  color: buttontext;
+  background-color: buttonface;
+  text-decoration: none;
+  margin: auto;
+  display: block;
+  width: fit-content;
+  margin-top: 25px;
+}

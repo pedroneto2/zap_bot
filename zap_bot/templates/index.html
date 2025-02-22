@@ -11,10 +11,14 @@
       <th>Nome do cliente</th>
       <th>Whatsapp do cliente</th>
       <th>Endereço do cliente</th>
-      <th>Items do pedido do cliente</th>
-      <th>Preço Total do pedido</th>
-      <th>Data de criação do pedido</th>
-      <th>Operação</th>
+      <th>Items do pedido</th>
+      <th>Preço Total</th>
+      <th>Data de criação</th>
+      <th>Opções</th>
     </tr>
   </table>
+  <div id="paginator-container"></div>
 </body>
+<script type="text/javascript">
+  loadTableAndPaginator({{ orders|tojson }}, {{ per_page|tojson }}, {{ data_length|tojson }})
+</script>
