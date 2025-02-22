@@ -1,0 +1,23 @@
+<header>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/login.css')}}">
+</header>
+<body>
+  <p id="warn-message">{{ message }}</p>
+
+  <h1>Login</h1>
+  <form action="{{url_for( 'authentication')}}">
+    <label for="user">Usuario:</label>
+    <input class="input-field" type="text" id="user" name="user"><br><br>
+    <label for="pwd">Senha:</label>
+    <input class="input-field" type="password" id="pwd" name="pwd"><br><br>
+    <input id="submit-btn" type="submit" value="Entrar">
+  </form>
+</body>
+<script>
+  if('{{ message }}'){
+    document.querySelector('#warn-message').hidden = false
+    setTimeout(()=> { document.querySelector('#warn-message').hidden = true }, 5000)
+  } else {
+    document.querySelector('#warn-message').hidden = true
+  }
+</script>

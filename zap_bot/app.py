@@ -1,50 +1,18 @@
 import os
 import json
+import jwt
 from redis import Redis
 from sqlite3.dbapi2 import connect
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, make_response
 from urllib.parse import urlparse
-
-def create_db():
-  sql = '''
-    CREATE TABLE IF NOT EXISTS "messages"(
-      "wa_id" TEXT,
-      "role" TEXT,
-      "content" TEXT,
-      "tool_calls" TEXT,
-      "tool_call_id" TEXT,
-      "name" TEXT,
-      "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE IF NOT EXISTS "products"(
-      "id" INTEGER,
-      "name" TEXT,
-      "price" TEXT,
-      "unit" TEXT,
-      "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY("id")
-    );
-    CREATE TABLE IF NOT EXISTS "orders"(
-      "id" INTEGER,
-      "customer_name" TEXT,
-      "customer_phone" TEXT,
-      "customer_address" TEXT,
-      "items" TEXT,
-      "total_price" TEXT,
-      "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY("id")
-    )
-  '''
-  cursor = connection.cursor()
-  cursor.executescript(sql)
-  connection.commit()
-  cursor.close()
+from init_db import create_db
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 url = urlparse(os.environ['REDISTOGO_URL'])
 redis = Redis(host=url.hostname, port=url.port, password=url.password, decode_responses=True)
 connection = connect('./database.db', check_same_thread=False)
-create_db()
+create_db(connection)
 
 @app.route('/whatsapp/webhook', methods=['GET', 'POST'])
 def whatsapp_webhook():
@@ -65,31 +33,53 @@ def whatsapp_webhook():
       
     return {}
 
-@app.get('/admin/orders/edit/<id>')
-def edit_order(id):
-  sql = "SELECT * FROM orders WHERE id = ?"
 
-  cursor = connection.cursor()
-  cursor.execute(sql, (id))
-  orders = cursor.fetchall()
-  cursor.close()
 
-  order = orders[0]
 
-  parsed_order = dict()
 
-  parsed_order['id'] = order[0]
-  parsed_order['customer_name'] = order[1]
-  parsed_order['customer_phone'] = order[2]
-  parsed_order['customer_address'] = order[3]
-  parsed_order['items'] = json.loads(order[4].replace("\'", "\""))
-  parsed_order['total_price'] = order[5]
-  parsed_order['created_at'] = order[6]
+@app.get('/login')
+def login():
+  access_token = request.cookies.get('access_token')
 
-  return render_template('edit.html', order = parsed_order)
+  if authenticate_token(access_token):
+    return redirect(url_for('index'))
+
+  message = request.args.get('message', default = '', type = str)
+
+  return render_template('login.html', message = message)
+
+
+
+
+
+@app.get('/authentication')
+def authentication():
+  user = request.args.get('user', type = str)
+  pwd = request.args.get('pwd', type = str)
+
+  if authenticate_user(user, pwd):
+    payload = {}
+    payload['username'] = user
+    payload['password'] = pwd
+    payload['exp'] = datetime.now() + timedelta(minutes = 60)
+    encoded_jwt = jwt.encode(payload, os.environ['JWT_SECRET'], algorithm="HS256")
+    response = make_response(redirect(url_for('index')))
+    response.set_cookie('access_token', encoded_jwt)
+    return response
+  else:
+    return redirect(url_for('login', message = 'Invalid Credentials'))
+
+
+
+
 
 @app.get('/admin/orders')
 def index():
+  access_token = request.cookies.get('access_token')
+
+  if not authenticate_token(access_token):
+    return redirect(url_for('login', message = 'Invalid Credentials'))
+
   page = request.args.get('page', default = 1, type = int)
   per_page = 10
 
@@ -118,10 +108,52 @@ def index():
                               'created_at': order[6]
                             }, orders))
   
-  return render_template('index.html', orders = parsed_orders, per_page = per_page, data_length = data_length)
+  return render_template('index.html', orders = parsed_orders, per_page = per_page,
+                                       data_length = data_length, access_token = access_token)
+
+
+
+
+
+@app.get('/admin/orders/edit/<id>')
+def edit_order(id):
+  access_token = request.cookies.get('access_token')
+
+  if not authenticate_token(access_token):
+    return redirect(url_for('login', message = 'Invalid Credentials'))
+
+  sql = "SELECT * FROM orders WHERE id = ?"
+
+  cursor = connection.cursor()
+  cursor.execute(sql, (id))
+  orders = cursor.fetchall()
+  cursor.close()
+
+  order = orders[0]
+
+  parsed_order = dict()
+
+  parsed_order['id'] = order[0]
+  parsed_order['customer_name'] = order[1]
+  parsed_order['customer_phone'] = order[2]
+  parsed_order['customer_address'] = order[3]
+  parsed_order['items'] = json.loads(order[4].replace("\'", "\""))
+  parsed_order['total_price'] = order[5]
+  parsed_order['created_at'] = order[6]
+
+  return render_template('edit.html', order = parsed_order, access_token = access_token)
+
+
+
+
 
 @app.get('/admin/orders/save/<id>')
 def save_order(id):
+  access_token = request.args.get('access_token', type = str)
+
+  if not authenticate_token(access_token):
+    return redirect(url_for('login', message = 'Invalid Credentials'))
+
   customer_name = request.args.get('cname', type = str)
   customer_phone = request.args.get('cphone', type = str)
   customer_address = request.args.get('caddress', type = str)
@@ -139,15 +171,63 @@ def save_order(id):
 
   return redirect(url_for('index'))
 
+
+
+
+
 @app.delete('/admin/orders/delete')
 def delete_orders():
+  access_token = request.args.get('access_token', type = str)
+
+  if not authenticate_token(access_token):
+    return { 'success': False, 'error': 'Invalid Credentials' }
+
   order_id = request.args.get('id', type = str)
+  access_token = request.args.get('access_token', type = str)
   sql = "DELETE FROM orders WHERE id = ?"
 
   cursor = connection.cursor()
   cursor.execute(sql, (order_id))
   cursor.close()
 
-  return {}
+  return { 'success': True }
+
+
+
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return redirect(url_for('index'))
+
+
+
+
+
+def authenticate_user(name, password):
+  sql = "SELECT name, password FROM users WHERE name = ? AND password = ?"
+
+  cursor = connection.cursor()
+  cursor.execute(sql, (name, password))
+  user = cursor.fetchall()
+  cursor.close()
+
+  return bool(user)
+
+
+
+
+
+def authenticate_token(access_token):
+  try:
+    payload = jwt.decode(access_token, os.environ['JWT_SECRET'], algorithms=["HS256"])
+  except:
+    return False
+  
+  return authenticate_user(payload['username'], payload['password'])
+
+
+
+
 
 from text.handler import handle_text_requests

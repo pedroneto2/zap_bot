@@ -4,12 +4,12 @@ function goToTop(){
   scrollTo({ top: 0, left: 0, behavior: 'smooth' })
 }
 
-function loadTableAndPaginator(data, perPage, dataLength) {
-  loadTable(data)
+function loadTableAndPaginator(data, perPage, dataLength, access_token) {
+  loadTable(data, access_token)
   loadPaginator(dataLength, perPage)
 }
 
-function loadTable(data){
+function loadTable(data, access_token){
   const table = document.querySelector('#orders-table')
 
   data.forEach((order, index) => {
@@ -32,7 +32,7 @@ function loadTable(data){
         <td>${order.total_price}</td>
         <td>${order.created_at}</td>
         <td>
-            <button onclick="deleteOrder(${order.id})">Deletar</button>
+            <button onclick="deleteOrder(${order.id}, '${access_token}')">Deletar</button>
             <button onclick="editOrder(${order.id})">Editar</button>
         </td>
       </tr>
@@ -40,13 +40,22 @@ function loadTable(data){
   })
 }
 
-function deleteOrder(orderId){
+function parseDeletion(){
+  const response = JSON.parse(this.responseText)
+
+  msg = response.success ? 'Pedido deletado!' : `Erro: ${response.error}`
+
+  alert(msg)
+
+  window.location.reload(1)
+}
+
+function deleteOrder(orderId, access_token){
   if (confirm("Você tem certeza?") == true) {
     const xhttp = new XMLHttpRequest()
-    xhttp.open("DELETE", `orders/delete?id=${orderId}`)
+    xhttp.onload = parseDeletion
+    xhttp.open("DELETE", `orders/delete?id=${orderId}&access_token=${access_token}`)
     xhttp.send()
-    alert('Pedido deletado!')
-    window.location.reload(1)
   }
 }
 
