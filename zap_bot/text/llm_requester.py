@@ -169,6 +169,10 @@ class LlmRequester:
                     "quantity": {
                       "type": "number",
                       "description": "The quantity of the product of the customer's order item",
+                    },
+                    "unit": {
+                      "type": "number",
+                      "description": "The quantity unit of the product of the customer's order item. Examples: kg, g, unit, L, ml",
                     }
                   }
                 }

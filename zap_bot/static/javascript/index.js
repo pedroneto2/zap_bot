@@ -23,14 +23,10 @@ function loadTable(data){
             <div class='product-container' style="background: ${index%2 ? '#b1c4da' : '#9eaec2'}">
               <p class="product-header">Produto ${index + 1}</p>
               <hr>
-              <p class="product-description">codigo:</p>
-              <p>${item.product_id}</p>
-              <p class="product-description">nome:</p>
-              <p>${item.product_name}</p>
-              <p class="product-description">preço:</p>
-              <p>${item.product_price}</p>
-              <p class="product-description">quantidade:</p>
-              <p>${item.quantity}</p>
+              <p><span class="product-description">codigo: </span><span>${item.product_id}</span></p>
+              <p><span class="product-description">nome: </span><span>${item.product_name}</span></p>
+              <p><span class="product-description">preço: </span><span>${item.product_price}</span></p>
+              <p><span class="product-description">quantidade: </span><span>${item.quantity}</span></p>
             </div>`).join('')}
         </td>
         <td>${order.total_price}</td>

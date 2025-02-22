@@ -34,6 +34,6 @@ class MessagesBuilder:
 
   def safe_json_loads(self, value):
     try:  
-      return json.loads(value.replace("\'", "\""))
+      return json.loads(value)
     except (json.JSONDecodeError, TypeError):
       return value or None

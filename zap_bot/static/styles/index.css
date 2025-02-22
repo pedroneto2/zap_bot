@@ -21,14 +21,17 @@ th {
   font-weight: bold;
 }
 
+td {
+  max-width: 300px;
+}
+
 tr:nth-child(even) {
   background-color: #dddddd;
 }
 
-p {
+span, p {
   margin: 0;
   font-size: small;
-  text-align: center;
 }
 
 hr {
@@ -51,10 +54,12 @@ button {
 .product-header {
   padding-top: 1px;
   font-weight: bold;
+  text-align: center;
 }
 
 .product-description {
   font-weight: bold;
+  text-align: left;
 }
 
 .active-page {
