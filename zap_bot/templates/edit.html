@@ -43,5 +43,5 @@
     addProduct({{ products|tojson }})
   })
 
-  createSelectListeners({{ order.products|tojson }}, {{ products|tojson }})
+  createSelectListeners({{ order.customer_products|tojson }}, {{ products|tojson }})
 </script>
