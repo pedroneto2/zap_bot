@@ -19,14 +19,14 @@ function loadTable(data, access_token){
         <td>${order.customer_name}</td>
         <td>${formatPhone(order.customer_phone)}</td>
         <td>${order.customer_address}</td>
-        <td>${order.items.map((item, index) => `
-            <div class='product-container' style="background: ${index%2 ? '#b1c4da' : '#9eaec2'}">
+        <td>${order.customer_products.map((product, index) => `
+            <div class='product-container ${index%2 ? 'product-container-odd' : 'product-container-even'}'>
               <p class="product-header">Produto ${index + 1}</p>
               <hr>
-              <p><span class="product-description">codigo: </span><span>${item.product_id}</span></p>
-              <p><span class="product-description">nome: </span><span>${item.product_name}</span></p>
-              <p><span class="product-description">preço: </span><span>${item.product_price}</span></p>
-              <p><span class="product-description">quantidade: </span><span>${item.quantity}</span></p>
+              <p><span class="product-description">codigo: </span><span>${product.id}</span></p>
+              <p><span class="product-description">nome: </span><span>${product.name}</span></p>
+              <p><span class="product-description">preço/un: </span><span>${product.price_per_unit}</span></p>
+              <p><span class="product-description">quantidade: </span><span>${product.quantity}</span></p>
             </div>`).join('')}
         </td>
         <td>${order.total_price}</td>

@@ -12,8 +12,7 @@ def create_db(connection):
     CREATE TABLE IF NOT EXISTS "products"(
       "id" INTEGER,
       "name" TEXT,
-      "price" TEXT,
-      "unit" TEXT,
+      "prices_per_unit" TEXT,
       "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY("id")
     );
@@ -22,7 +21,7 @@ def create_db(connection):
       "customer_name" TEXT,
       "customer_phone" TEXT,
       "customer_address" TEXT,
-      "items" TEXT,
+      "customer_products" TEXT,
       "total_price" TEXT,
       "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY("id")

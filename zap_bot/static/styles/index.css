@@ -51,6 +51,14 @@ button {
   border-radius: 5px;
 }
 
+.product-container-even{
+  background:#9eaec2;
+}
+
+.product-container-odd{
+  background:#b1c4da;
+}
+
 .product-header {
   padding-top: 1px;
   font-weight: bold;

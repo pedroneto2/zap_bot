@@ -148,33 +148,30 @@ class LlmRequester:
                 "type": "string",
                 "description": "The customer address",
               },
-              "items": {
+              "customer_products": {
                 "type": "array",
-                "description": "A list with the items of the customer order",
+                "description": "A list with the products of the customer order",
                 "items": {
                   "type": "object",
                   "properties": {
-                    "product_id": {
+                    "id": {
                       "type": "integer",
-                      "description": "The product id of the customer's order item",
+                      "description": "The product id of the customer's order",
                     },
-                    "product_name": {
+                    "name": {
                       "type": "string",
-                      "description": "The product name of the customer's order item",
+                      "description": "The product name of the customer's order",
                     },
-                    "product_price": {
+                    "price_per_unit": {
                       "type": "string",
-                      "description": "The product price of the customer's order item",
+                      "description": "The product price per unit of the customer's order. Examples: ['13.43/kg', '9.00/unit', '4.20/ml']",
                     },
                     "quantity": {
                       "type": "number",
-                      "description": "The quantity of the product of the customer's order item",
-                    },
-                    "unit": {
-                      "type": "number",
-                      "description": "The quantity unit of the product of the customer's order item. Examples: kg, g, unit, L, ml",
+                      "description": "The product quantity of the customer's order. Examples: ['2', '1.4', '0.312']",
                     }
-                  }
+                  },
+                  "required": ["id", "name", "price_per_unit", "quantity"]
                 }
               },
               "total_price": {
@@ -182,7 +179,7 @@ class LlmRequester:
                 "description": "The order total price",
               }
             },
-            "required": ["customer_name", "customer_phone", "customer_address", "items", "total_price"]
+            "required": ["customer_name", "customer_phone", "customer_address", "customer_products", "total_price"]
           }
         }
       }

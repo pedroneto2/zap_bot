@@ -19,6 +19,21 @@ label {
   margin-bottom: 10px;
   text-align: center;
   padding: 5px;
+  background: transparent;
+}
+
+.product-container{
+  padding: 25px 25px 0 25px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.product-container-even{
+  background:#9eaec2;
+}
+
+.product-container-odd{
+  background:#b1c4da;
 }
 
 form {
@@ -29,6 +44,13 @@ form {
 #submit-btn {
   margin: 0 auto;
   display: block;
+}
+
+#add-product-btn{
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 25px;
+  padding: 2px 5px;
 }
 
 a {

@@ -24,8 +24,6 @@ def index():
   cursor.execute(sql2)
   data_length = cursor.fetchall()[0]
   cursor.close()
-
-  print(data_length)
   
   parsed_orders = list(map(lambda order:
                             { 
@@ -33,7 +31,7 @@ def index():
                               'customer_name': order[1],
                               'customer_phone': order[2],
                               'customer_address': order[3],
-                              'items': json.loads(order[4].replace("\'", "\"")),
+                              'customer_products': json.loads(order[4].replace("\'", "\"")),
                               'total_price': order[5],
                               'created_at': order[6]
                             }, orders))
@@ -53,10 +51,13 @@ def edit_order(id):
     return redirect(url_for('login', message = 'Invalid Credentials'))
 
   sql = "SELECT * FROM orders WHERE id = ?"
+  sql2 = "SELECT id, name, prices_per_unit FROM products"
 
   cursor = connection.cursor()
   cursor.execute(sql, (id))
   orders = cursor.fetchall()
+  cursor.execute(sql2)
+  products = cursor.fetchall()
   cursor.close()
 
   order = orders[0]
@@ -67,11 +68,21 @@ def edit_order(id):
   parsed_order['customer_name'] = order[1]
   parsed_order['customer_phone'] = order[2]
   parsed_order['customer_address'] = order[3]
-  parsed_order['items'] = json.loads(order[4].replace("\'", "\""))
+  parsed_order['customer_products'] = json.loads(order[4].replace("\'", "\""))
   parsed_order['total_price'] = order[5]
   parsed_order['created_at'] = order[6]
 
-  return render_template('edit.html', order = parsed_order, access_token = access_token)
+  parsed_products = list(map(lambda product:
+                            {
+                              'id': product[0],
+                              'name': product[1],
+                              'prices_per_unit': json.loads(product[2].replace("\'", "\""))
+                            }, products))
+
+  return render_template('edit.html', order = parsed_order,
+                                      products = parsed_products,
+                                      order_products_count = len(parsed_order['customer_products']),
+                                      access_token = access_token)
 
 
 
@@ -89,15 +100,38 @@ def save_order(id):
   customer_address = request.args.get('caddress', type = str)
   customer_price = request.args.get('tprice', type = str)
 
+  product_amount = request.args.get('product-amount', type = int)
+
+  customer_products = []
+
+  for i in range(1, product_amount + 1):
+    product = request.args.get(f'oproduct{i}', type = str)
+    price_per_unit = request.args.get(f'uprice{i}', type = str)
+    quantity = request.args.get(f'pquantity{i}', type = int)
+
+    if not quantity:
+      continue
+
+    product = json.loads(product.replace("\'", "\""))
+    product['price_per_unit'] = price_per_unit
+    product['quantity'] = quantity
+
+    customer_products.append(product)
+
+  customer_products = json.dumps(customer_products)
+
   sql = '''
     UPDATE orders SET customer_name = ?, customer_phone = ?,
-                      customer_address = ?, total_price = ?
+                      customer_address = ?, customer_products = ?,
+                      total_price = ?
     WHERE id = ?
   '''
 
   cursor = connection.cursor()
-  cursor.execute(sql, (customer_name, customer_phone, customer_address, customer_price, id))
-  cursor.close()  
+  cursor.execute(sql, (customer_name, customer_phone, customer_address,
+                       customer_products, customer_price, id))
+  connection.commit()
+  cursor.close()
 
   return redirect(url_for('index'))
 
@@ -118,6 +152,7 @@ def delete_orders():
 
   cursor = connection.cursor()
   cursor.execute(sql, (order_id))
+  connection.commit()
   cursor.close()
 
   return { 'success': True }
