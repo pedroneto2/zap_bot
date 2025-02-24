@@ -98,7 +98,7 @@ def save_order(id):
   customer_name = request.args.get('cname', type = str)
   customer_phone = request.args.get('cphone', type = str)
   customer_address = request.args.get('caddress', type = str)
-  customer_price = request.args.get('tprice', type = str)
+  customer_price = request.args.get('tprice', type = float)
 
   product_amount = request.args.get('product-amount', type = int)
 
@@ -107,7 +107,7 @@ def save_order(id):
   for i in range(1, product_amount + 1):
     product = request.args.get(f'oproduct{i}', type = str)
     price_per_unit = request.args.get(f'uprice{i}', type = str)
-    quantity = request.args.get(f'pquantity{i}', type = int)
+    quantity = request.args.get(f'pquantity{i}', type = float)
 
     if not quantity:
       continue
@@ -134,6 +134,31 @@ def save_order(id):
   cursor.close()
 
   return redirect(url_for('index'))
+
+
+
+
+
+@app.post('/admin/orders/new')
+def add_order():
+  access_token = request.args.get('access_token', type = str)
+
+  if not authenticate_token(access_token):
+    return { 'success': False, 'error': 'Invalid Credentials' }
+
+  customer_name = request.args.get('cname', type = str)
+  customer_phone = request.args.get('cphone', type = str)
+  customer_address = request.args.get('caddress', type = str)
+  customer_products = '[]'
+
+  sql = "INSERT INTO orders(customer_name, customer_phone, customer_address, customer_products) VALUES (?, ?, ?, ?)"
+
+  cursor = connection.cursor()
+  cursor.execute(sql, (customer_name, customer_phone, customer_address, customer_products))
+  connection.commit()
+  cursor.close()
+
+  return { "success": True }
 
 
 

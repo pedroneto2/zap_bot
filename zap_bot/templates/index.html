@@ -5,6 +5,14 @@
 </header>
 <body>
   <h1> Pedidos </h1>
+  <a href="{{url_for('products_index')}}">Ir para produtos</a>
+  <h4>Adicionar novo pedido:</h4>
+  <div id="add-order-container">
+    <input class="input-field" type="text" id="cname" name="cname" placeholder="Nome do cliente">
+    <input class="input-field" type="text" id="cphone" name="cphone" placeholder="Whatsapp do cliente">
+    <input class="input-field" type="text" id="caddress" name="caddress" placeholder="Endereço do cliente">
+    <button id="add-order-btn" onclick="addNewOrder('{{ access_token }}')">Adicionar</button>
+  </div>
   <table id="orders-table">
     <tr>
       <th>Número do pedido</th>

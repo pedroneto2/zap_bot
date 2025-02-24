@@ -4,6 +4,17 @@ function goToTop(){
   scrollTo({ top: 0, left: 0, behavior: 'smooth' })
 }
 
+function addNewOrder(access_token) {
+  const cName = document.querySelector('#cname').value
+  const cPhone = document.querySelector('#cphone').value
+  const cAddress = document.querySelector('#caddress').value
+
+  const xhttp = new XMLHttpRequest()
+  xhttp.onload = (data) => parseRequestResponse(data.target.response, 'Novo pedido adicionado!')
+  xhttp.open("POST", `orders/new?cname=${cName}&cphone=${cPhone}&caddress=${cAddress}&access_token=${access_token}`)
+  xhttp.send()
+}
+
 function loadTableAndPaginator(data, perPage, dataLength, access_token) {
   loadTable(data, access_token)
   loadPaginator(dataLength, perPage)
@@ -40,10 +51,10 @@ function loadTable(data, access_token){
   })
 }
 
-function parseDeletion(){
-  const response = JSON.parse(this.responseText)
+function parseRequestResponse(response, successResponse){
+  parsedResponse = JSON.parse(response)
 
-  msg = response.success ? 'Pedido deletado!' : `Erro: ${response.error}`
+  msg = parsedResponse.success ? successResponse : `Erro: ${parsedResponse.error}`
 
   alert(msg)
 
@@ -53,7 +64,7 @@ function parseDeletion(){
 function deleteOrder(orderId, access_token){
   if (confirm("Você tem certeza?") == true) {
     const xhttp = new XMLHttpRequest()
-    xhttp.onload = parseDeletion
+    xhttp.onload = (data) => parseRequestResponse(data.target.response, 'Pedido deletado!')
     xhttp.open("DELETE", `orders/delete?id=${orderId}&access_token=${access_token}`)
     xhttp.send()
   }

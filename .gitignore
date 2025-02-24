@@ -1,1 +1,2 @@
-zap_bot/database.db
+**/*.db
+**/*.pyc

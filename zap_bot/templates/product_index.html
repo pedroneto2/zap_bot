@@ -1,0 +1,26 @@
+<header>
+  <script src="{{url_for('static', filename='javascript/product_index.js')}}"></script>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/product_index.css')}}">
+</header>
+<body>
+  <h1> Produtos </h1>
+  <a href="{{url_for('index')}}">Ir para pedidos</a>
+  <h4>Adicionar novo produto:</h4>
+  <div id="add-product-container">
+    <input class="input-field" type="text" id="pname" name="pname" placeholder="Nome do produto">
+    <button id="add-product-btn" onclick="addNewProduct('{{ access_token }}')">Adicionar</button>
+  </div>
+  <table id="products-table">
+    <tr>
+      <th>Código do produto</th>
+      <th>Nome do produto</th>
+      <th>Preços por unidade</th>
+      <th>Data de criação</th>
+      <th>Opções</th>
+    </tr>
+  </table>
+  <div id="product-paginator-container"></div>
+</body>
+<script type="text/javascript">
+  loadTableAndPaginator({{ products|tojson }}, {{ per_page|tojson }}, {{ data_length|tojson }}, {{ access_token|tojson }})
+</script>

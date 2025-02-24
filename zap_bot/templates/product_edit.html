@@ -1,0 +1,35 @@
+<header>
+  <script src="{{url_for('static', filename='javascript/product_edit.js')}}"></script>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/product_edit.css')}}">
+</header>
+<body>
+  <h1>Editar Produto <span>{{product.id}}</span></h1>
+  <form action="{{url_for( 'save_product', id = product.id)}}">
+    <label for="pname">Nome do Produto:</label>
+    <input class="input-field" type="text" id="pname" name="pname" value="{{product.name}}"><br><br>
+    <div id="ppu-product-container">
+    {% for productPpu in product.prices_per_unit %}
+      <div class="ppu-product-container ppu-product-container-{{ 'even' if loop.index0 % 2 else 'odd' }}">
+        <h3 class="ppu-product-header">Preço por Unidade {{loop.index0 + 1}}</h3>
+        <label for="price-ppu{{loop.index0 + 1}}">Preço:</label>
+        <input class="input-field" id="price-ppu{{loop.index0 + 1}}" name="price-ppu{{loop.index0 + 1}}" type="number" step=".01" value="{{ productPpu.split('/')[0] }}"><br><br>
+        <label for="unit-ppu{{loop.index0 + 1}}">Unidade:</label>
+        <input class="input-field" id="unit-ppu{{loop.index0 + 1}}" name="unit-ppu{{loop.index0 + 1}}" type="text" value="{{ productPpu.split('/')[1] }}"><br><br>
+      </div>
+    {% endfor %}
+    </div>
+    <button id="add-ppu-btn">Adicionar Preço por Unidade</button>
+    <input type="hidden" id="access_token" name="access_token" value="{{access_token}}">
+    <input type="hidden" id="ppu-product-amount" name="ppu-product-amount" value="{{ prices_per_unit_count }}">
+    <input id="submit-btn" type="submit" value="Salvar">
+  </form>
+
+  <a href="{{url_for('products_index')}}">Voltar sem salvar</a>
+</body>
+<script>
+  document.querySelector('#add-ppu-btn').addEventListener('click', (e) => {
+    e.preventDefault()
+    addPricePerUnit()
+  })
+  addUnitListeners({{ prices_per_unit_count }})
+</script>

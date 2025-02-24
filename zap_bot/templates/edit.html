@@ -23,13 +23,13 @@
         <label for="uprice{{loop.index0 + 1}}">Preço/un do Produto {{loop.index0 + 1}}:</label>
         <select class="input-field" id="uprice{{loop.index0 + 1}}" name="uprice{{loop.index0 + 1}}"></select><br><br>
         <label for="pquantity{{loop.index0 + 1}}">Quantidade do Produto{{loop.index0 + 1}}:</label>
-        <input class="input-field" type="number" id="pquantity{{loop.index0 + 1}}" name="pquantity{{loop.index0 + 1}}" value="{{order_product.quantity}}"><br><br>
+        <input class="input-field" type="number" step=".01" id="pquantity{{loop.index0 + 1}}" name="pquantity{{loop.index0 + 1}}" value="{{order_product.quantity}}"><br><br>
       </div>
     {% endfor %}
     </div>
     <button id="add-product-btn">Adicionar Produto</button>
     <label for="tprice">Preço Total do Pedido:</label>
-    <input class="input-field" type="text" id="tprice" name="tprice" value="{{order.total_price}}"><br><br>
+    <input class="input-field" type="number" step=".01" id="tprice" name="tprice" value="{{order.total_price}}"><br><br>
     <input type="hidden" id="access_token" name="access_token" value="{{access_token}}">
     <input type="hidden" id="product-amount" name="product-amount" value="{{ order_products_count }}">
     <input id="submit-btn" type="submit" value="Salvar">

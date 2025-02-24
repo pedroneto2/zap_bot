@@ -61,58 +61,36 @@ button {
   color: red;
 }
 
-.product-container {
-  margin: 5px;
-  padding: 2px;
-  text-align: left;
-  border-radius: 5px;
-}
-
-.product-container-even{
-  background:#9eaec2;
-}
-
-.product-container-odd{
-  background:#b1c4da;
-}
-
-.product-header {
-  padding-top: 1px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.product-description {
-  font-weight: bold;
-  text-align: left;
-}
-
 .active-page {
   color: blue !important;
 }
 
-#paginator-container {
+.product-unit{
+  padding: 2px;
+}
+
+#product-paginator-container {
   display: flex;
   justify-content: center;
 }
 
-#paginator-container > button {
+#product-paginator-container > button {
   margin-left: 4px;
   margin-right: 4px;
   color: black;
   cursor: pointer;
 }
 
-#add-order-container{
+#add-product-container{
   font-size: small;
   margin-bottom: 25px;
 }
 
-#add-order-container > input{
+#add-product-container > input{
   margin-right: 10px;
 }
 
-#add-order-btn{
+#add-product-btn{
   font-size: small;
   text-align: start;
   margin: auto;

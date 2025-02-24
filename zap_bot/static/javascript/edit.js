@@ -44,14 +44,14 @@ function addProduct(products){
       <label for="uprice${productCount}">Preço/un do Produto ${productCount}:</label>
       <select class="input-field" id="uprice${productCount}" name="uprice${productCount}"></select><br><br>
       <label for="pquantity${productCount}">Quantidade do Produto${productCount}:</label>
-      <input class="input-field" type="number" id="pquantity${productCount}" name="pquantity${productCount}" value="1"><br><br>
+      <input class="input-field" type="number" step=".01" id="pquantity${productCount}" name="pquantity${productCount}" value="1"><br><br>
     </div>
   `
 
   const newOrderProductField = document.querySelector(`#oproduct${productCount}`)
 
   populateOrderProductPricesPerUnitSelects(null, products, productCount, newOrderProductField)
-  newOrderProductField.addEventListener('change', (element) => populateOrderProductPricesPerUnitSelects(undefined, products, productCount, element.target))
+  newOrderProductField.addEventListener('change', (e) => populateOrderProductPricesPerUnitSelects(undefined, products, productCount, e.target))
 
   const productAmountElement = document.querySelector('#product-amount')
   productAmountElement.value = productCount

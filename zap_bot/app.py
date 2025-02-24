@@ -43,4 +43,5 @@ def page_not_found(error):
 
 from auth import *
 from orders import *
+from products import *
 from text.handler import handle_text_requests

@@ -1,0 +1,71 @@
+h1 {
+  font-weight: bold;
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+span {
+  color: #780e0e
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+.input-field {
+  width: 300px;
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 5px;
+  background: transparent;
+}
+
+.ppu-product-header{
+  text-align: center;
+}
+
+.ppu-product-container{
+  padding: 25px 25px 0 25px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.ppu-product-container-even{
+  background:#9eaec2;
+}
+
+.ppu-product-container-odd{
+  background:#b1c4da;
+}
+
+form {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+#submit-btn {
+  margin: 0 auto;
+  display: block;
+}
+
+#add-ppu-btn{
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 25px;
+  padding: 2px 5px;
+}
+
+a {
+  padding: 1px 6px;
+  border: 1px outset buttonborder;
+  border-radius: 3px;
+  color: buttontext;
+  background-color: buttonface;
+  text-decoration: none;
+  margin: auto;
+  display: block;
+  width: fit-content;
+  margin-top: 25px;
+}
